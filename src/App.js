@@ -14,6 +14,10 @@ function App() {
   const [predictions, setPredictions] = useState([]);
   const [restockInputs, setRestockInputs] = useState({}); // { [name]: amount }
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'user' });
+  const [lowStock, setLowStock] = useState([]);
+const [topProducts, setTopProducts] = useState([]);
+const [restockSuggestions, setRestockSuggestions] = useState([]);
+const [dashboardStats, setDashboardStats] = useState({});
 
   // ⬇️ Item form now supports image upload + preview
   const [itemForm, setItemForm] = useState({
@@ -120,7 +124,7 @@ function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        userEmail: user.email,
+        userEmail: user?.email || "guest",
         items: cart.map(c => ({
           name: c.item.name,
           price: c.item.price,
@@ -161,7 +165,13 @@ function App() {
     fetchItems();
     if (role === 'admin') {
       fetchOrders();
-      fetchPredictions();
+    fetchItems();
+    fetchPredictions();
+
+    fetchLowStock();
+    fetchTopProducts();
+    fetchRestockSuggestions();
+    fetchDashboardStats();
     }
   }, [role, fetchItems, fetchOrders, fetchPredictions]);
 
@@ -185,7 +195,29 @@ function App() {
       console.error("Error deleting order:", error);
     }
   };
+  const fetchLowStock = async () => {
+  const res = await fetch("http://localhost:5000/api/low-stock");
+  const data = await res.json();
+  setLowStock(data);
+};
 
+const fetchTopProducts = async () => {
+  const res = await fetch("http://localhost:5000/api/top-products");
+  const data = await res.json();
+  setTopProducts(data);
+};
+
+const fetchRestockSuggestions = async () => {
+  const res = await fetch("http://localhost:5000/api/restock-suggestions");
+  const data = await res.json();
+  setRestockSuggestions(data);
+};
+
+const fetchDashboardStats = async () => {
+  const res = await fetch("http://localhost:5000/api/dashboard");
+  const data = await res.json();
+  setDashboardStats(data);
+};
   // Admin: Restock item
   const restockItem = async (name) => {
     const amount = Number(restockInputs[name] || 0);
@@ -272,10 +304,10 @@ function App() {
   card: {
     minWidth: 180,
     maxWidth: 200,
-    backgroundimage: 'linear-gradient(180deg, rgba(20,20,20,1) 0%, rgba(34,34,34,1) 100%)',
+    backgroundImage: 'linear-gradient(180deg, rgb(250, 244, 244) 0%, rgba(34,34,34,1) 100%)',
     borderRadius: 8,
     overflow: 'hidden',
-    boxShadow: '0 2px 8px rgba(14, 13, 10, 0.4)',
+    boxShadow: '0 2px 8px rgba(238, 230, 201, 0.4)',
     flexShrink: 0
   },
   cardImage: {
@@ -295,7 +327,7 @@ function App() {
     fontWeight: 'bold'
   },
   listItem: {
-    backgroundimage: 'linear-gradient(90deg, rgba(34,34,34,1) 0%, rgba(20,20,20,1) 100%)',
+    backgroundImage: 'linear-gradient(90deg, rgb(226, 220, 220) 0%, rgba(20,20,20,1) 100%)',
     padding: '12px',
     boxShadow: '0 2px 8px rgba(14, 13, 10, 0.4)',
     borderRadius: '5px',
@@ -379,6 +411,39 @@ function App() {
           <h3>Stock Chart</h3>
           <Bar data={chartData} />
         </div>
+         <div style={{padding:"20px",color:"black" ,background:"#f5f5f5", margin:"10px 0"}}>
+  <h2>Business Insights</h2>
+
+  <p>Total Orders: {dashboardStats.totalOrders}</p>
+  <p>Total Revenue: ₹{dashboardStats.revenue}</p>
+</div>
+<div style={{padding:"20px", background:"#e81717", margin:"10px 0"}}>
+  <h2>Low Stock Alerts</h2>
+
+  {lowStock.map((item,index)=>(
+    <p key={index}>
+      {item.name} - {item.stock} left
+    </p>
+  ))}
+</div>
+<div style={{padding:"20px", background:"#ffffff",color:"black", margin:"10px 0"}}>
+  <h2>Top Selling Products</h2>
+
+  {topProducts.map((product,index)=>(
+    <p key={index}>
+      {index+1}. {product[0]} - {product[1]} sold
+    </p>
+  ))}
+</div>
+<div style={{padding:"20px", background:"#fe0404", margin:"10px 0"}}>
+  <h2>AI Restock Suggestions</h2>
+
+  {restockSuggestions.map((item,index)=>(
+    <p key={index}>
+      {item.product} → Add {item.recommendedRestock} units
+    </p>
+  ))}
+</div>
 
         {/* Predictive Restock Assistant */}
         <div style={styles.section}>
@@ -386,6 +451,7 @@ function App() {
             Restock Predictions
             <span style={styles.badge}>AI Assist</span>
           </h3>
+          
           <table style={styles.table}>
             <thead>
               <tr>
@@ -398,6 +464,7 @@ function App() {
                 <th style={styles.thtd}>Action</th>
               </tr>
             </thead>
+           
             <tbody>
               {predictions.map(p => (
                 <tr key={p.name} style={{ background: p.recommend ? '#1b1b1b' : '#222' }}>
@@ -498,7 +565,7 @@ function App() {
         ))}
       </div>
     </div>
-
+    
     {/* Cart section */}
     <div style={styles.section}>
       <h3>Cart</h3>
