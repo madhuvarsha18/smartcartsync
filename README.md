@@ -1,4 +1,4 @@
-**SmartCartSync – AI-Powered Retail Analytics & Inventory Management**
+**SmartCartSync –Retail Analytics & Inventory Management**
 
 
 📌 About the Project
@@ -8,7 +8,6 @@ SmartCartSync is a full-stack MERN application designed to simplify retail store
 Rather than building just another e-commerce website, I wanted to create a system that combines inventory management with intelligent business analytics. The project is structured to support future AI-powered decision making, making it scalable beyond basic CRUD operations.
 
 ✨ Why I Built This
-
 Most beginner e-commerce projects stop at login, products, and checkout.
 
 I wanted to go one step further.
@@ -22,17 +21,20 @@ This project strengthened my understanding of full-stack development while givin
 Secure user registration
 User login with authentication
 Customer information stored securely in MongoDB
+
 🛍 Product Management
 Add new products
 Update existing products
 Delete products
 Upload product images
 Manage product quantity and pricing
+
 📊 Admin Dashboard
 View all registered customers
 Monitor product inventory
 Search users quickly
 Centralized management interface
+
 📦 Inventory Analytics
 Low stock alerts
 Average products sold per day
@@ -41,6 +43,7 @@ Predicted out-of-stock date
 AI-inspired restock suggestions
 Best-selling product identification
 Slow-moving product analysis
+
 📈 Future AI Vision
 
 The system is designed to evolve into an intelligent retail analytics platform capable of:
@@ -49,6 +52,7 @@ Demand forecasting
 Sales trend prediction
 Smart inventory optimization
 AI-based purchasing recommendations
+
 🏗 Tech Stack
 Frontend
 React.js
@@ -69,6 +73,7 @@ Development Tools
 VS Code
 Git & GitHub
 Postman
+
 📂 Project Workflow
 Customer
       ↓
@@ -81,10 +86,10 @@ Node.js + Express Backend
 MongoDB Database
       ↓
 Admin Dashboard & Analytics
+
 💡 What I Learned
 
 This project helped me understand:
-
 Building REST APIs
 React component architecture
 MongoDB database design
